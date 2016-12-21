@@ -1,0 +1,117 @@
+Create a sample dataset and implement the below Pig commands on the same dataset.
+1) Concat
+2) Tokenize
+3) Sum
+4) Min
+5) Max
+6) Limit
+7) Store
+8) Distinct
+9) Flatten
+10) IsEmpty
+
+
+---------------------------------------------------------------------------------------
+
+Sample Data:          data.txt
+------------
+
+Jorge Posada	New York Yankees	{(Catcher),(Designated_hitter)}	[games#1594,hit_by_pitch#65,on_base_percentage#0.379,grand_slams#7,home_runs#243,at_bats#5365,sacrifice_flies#43,gdb#163,sacrifice_hits#1,ibbs#71,base_on_balls#838,hits#1488,rbis#964,slugging_percentage#0.48,batting_average#0.277,triples#9,doubles#342,strikeouts#1278,runs#817]
+
+Landon Powell	Oakland Athletics	{(Catcher),(First_baseman)}	[on_base_percentage#0.297,games#46,grand_slams#1,home_runs#7,at_bats#140,sacrifice_flies#1,gdb#3,base_on_balls#14,hits#32,rbis#30,slugging_percentage#0.429,batting_average#0.229,doubles#7,strikeouts#36,runs#19]
+
+Martín Prado	Atlanta Braves	{(Second_baseman),(Infielder),(Left_fielder)}	[games#258,hit_by_pitch#3,on_base_percentage#0.36,home_runs#14,sacrifice_flies#6,at_bats#779,gdb#22,sacrifice_hits#15,ibbs#1,base_on_balls#65,hits#239,rbis#93,slugging_percentage#0.451,batting_average#0.307,triples#5,doubles#60,strikeouts#101,runs#108]
+
+David Price	Tampa Bay Rays	{(Starting_pitcher),(Pitcher)}	[at_bats#3,games#28,on_base_percentage#0.333,hits#1,slugging_percentage#0.333,batting_average#0.333]
+
+Jason Pridie	Minnesota Twins	{(Outfielder),(Center_fielder),(Left_fielder)}	[at_bats#4,on_base_percentage#0.2,sacrifice_hits#1,base_on_balls#1,games#11,strikeouts#1,runs#3]
+
+Scott Proctor	Florida Marlins	{}	[at_bats#3,games#136,strikeouts#3]
+
+Albert Pujols	St. Louis Cardinals	{(Third_baseman),(First_baseman),(Left_fielder)}	[games#1399,hit_by_pitch#69,on_base_percentage#0.427,grand_slams#11,home_runs#366,at_bats#5146,sacrifice_flies#55,gdb#180,sacrifice_hits#1,ibbs#198,base_on_balls#811,hits#1717,rbis#1112,slugging_percentage#0.628,batting_average#0.334,triples#14,doubles#387,strikeouts#570,runs#1071]
+
+Nick Punto	Minnesota Twins	{(Second_baseman),(Third_baseman),(Infielder),(Shortstop)}	[games#736,hit_by_pitch#2,on_base_percentage#0.322,grand_slams#1,home_runs#12,at_bats#2216,sacrifice_flies#20,gdb#43,sacrifice_hits#42,ibbs#4,base_on_balls#250,hits#550,rbis#178,slugging_percentage#0.324,batting_average#0.248,triples#20,doubles#93,strikeouts#415,runs#301]
+
+----------------------------------------------------------------------------------------
+
+Concat:
+
+|A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
+|
+|B = FOREACH A GENERATE CONCAT(name,'_',team);
+|
+|DUMP B;
+
+----------------------------------------------------------------------------------------
+
+Tokenize:
+
+|A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
+|
+|B = FOREACH A GENERATE TOKENIZE(name);
+|
+|DUMP B;
+|
+|
+
+-----------------------------------------------------------------------------------------
+
+SUM,MIN and MAX:
+
+|A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
+|
+|B = GROUP A all;
+|
+|C = FOREACH B GENERATE SUM(A.stats#games);
+|
+|DUMP C;
+|
+|D = FOREACH B GENERATE MAX(A.stats#game);
+|
+|DUMP D;
+|
+|E = FOREACH B GENERATE MIN(A.stats#game);
+|
+|DUMP E;
+
+-----------------------------------------------------------------------------------------
+
+LIMIT and STORE:
+
+|A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
+|
+|B = LIMIT A 4;
+|
+|DUMP B;
+|
+|STORE B into 'B_output' using PigStorage();
+|
+
+------------------------------------------------------------------------------------------
+
+FLATEEN and DISTINCT:
+
+|A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
+|
+|B = FOREACH A GENERATE FLATTEN(positions) as allpositions;
+|
+|C = DISTINCT B;
+|
+|DUMP B;
+|
+|DUMP C;
+
+-------------------------------------------------------------------------------------------
+
+IsEmpty:
+
+|A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
+|
+|B = FILTER A BY IsEmpty(positions);
+|
+|DUMP B;
+|
+|
+|
+------------------------------------------------------------------------------------------
+
