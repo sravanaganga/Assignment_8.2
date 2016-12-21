@@ -91,7 +91,7 @@ LIMIT and STORE:
 
 ------------------------------------------------------------------------------------------
 
-FLATEEN and DISTINCT:
+FLATTEN and DISTINCT:
 
 |A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
 |
