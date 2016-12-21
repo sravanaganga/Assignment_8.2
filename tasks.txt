@@ -60,19 +60,21 @@ SUM,MIN and MAX:
 
 |A = load '/home/acadgild/data.txt' using PigStorage() as (name:chararray,team:chararray,positions:bag{t:tuple(p:chararray)},stats:map[]);
 |
-|B = GROUP A all;
+|B = FOREACH A GENERATE stats#'games' as games;
 |
-|C = FOREACH B GENERATE SUM(A.stats#games);
+|C = GROUP B ALL;
 |
-|DUMP C;
-|
-|D = FOREACH B GENERATE MAX(A.stats#game);
+|D = FOREACH C GENERATE SUM(B.games);
 |
 |DUMP D;
 |
-|E = FOREACH B GENERATE MIN(A.stats#game);
+|E = FOREACH C GENERATE MAX(B.games);
 |
 |DUMP E;
+|
+|F= FOREACH C GENERATE MIN(B.games);
+|
+|DUMP F;
 
 -----------------------------------------------------------------------------------------
 
